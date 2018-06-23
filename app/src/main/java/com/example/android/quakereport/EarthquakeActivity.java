@@ -27,6 +27,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private static final int EARTHQUAKE_LOADER_ID = 1;
     private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=20";
     private EarthquakeAdapter mAdapter;
+    /** TextView that is displayed when the list is empty */
+    private TextView emptyView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(mAdapter);
+        emptyView = (TextView) findViewById(R.id.empty);
+        earthquakeListView.setEmptyView(emptyView); // Display text is no earthquakes returned
 
         // Get a reference to the LoaderManager, in order to interact with loaders.
         LoaderManager loaderManager = getLoaderManager();
@@ -89,6 +96,11 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     }
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+        // Set empty state text to display "No earthquakes found."
+        emptyView.setText(R.string.no_earthquakes_found);
+        // Remove ProgressBar view when data load complete
+        progressBar =(ProgressBar)findViewById(R.id.PBindeterminate);
+        progressBar.setVisibility(View.GONE);
         // Clear the adapter of previous earthquake data */
         mAdapter.clear();
         // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
