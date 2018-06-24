@@ -19,10 +19,12 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,11 +44,10 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
      * This really only comes into play if you're using multiple loaders.
      */
     private static final int EARTHQUAKE_LOADER_ID = 1;
-    private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=20";
+    private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
     private EarthquakeAdapter mAdapter;
     /** TextView that is displayed when the list is empty */
     private TextView emptyView;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,15 +110,33 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String minMagnitude = sharedPrefs.getString(
+                getString(R.string.settings_min_magnitude_key),
+                getString(R.string.settings_order_by_magnitude_value)
+        );
+
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_most_recent_value)
+        );
+
+        Uri baseUri = Uri.parse(USGS_REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("format", "geojson");
+        uriBuilder.appendQueryParameter("limit", "10");
+        uriBuilder.appendQueryParameter("minmag", minMagnitude);
+        uriBuilder.appendQueryParameter("orderby", orderBy);
         // Create a new loader for the given URL
-        return new EarthquakeLoader(this,USGS_REQUEST_URL);
+        return new EarthquakeLoader(this, uriBuilder.toString());
     }
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
         // Set empty state text to display "No earthquakes found."
         emptyView.setText(R.string.no_earthquakes_found);
         // Remove ProgressBar view when data load complete
-        progressBar =(ProgressBar)findViewById(R.id.PBindeterminate);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.PBindeterminate);
         progressBar.setVisibility(View.GONE);
         // Clear the adapter of previous earthquake data */
         mAdapter.clear();
