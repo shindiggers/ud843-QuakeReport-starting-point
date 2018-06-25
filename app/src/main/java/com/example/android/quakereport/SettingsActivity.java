@@ -27,6 +27,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             Preference orderBy = findPreference(getString(R.string.settings_order_by_key));
             bindPreferenceSummaryToValue(orderBy);
+
+            Preference numberOfQuake = findPreference(getString(R.string.settings_number_of_quakes_key));
+            bindPreferenceSummaryToValue(numberOfQuake);
         }
 
         @Override

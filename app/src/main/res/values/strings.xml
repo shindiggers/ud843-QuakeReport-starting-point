@@ -28,7 +28,7 @@
     <!-- Settings Activity Title [CHAR LIMIT=NONE] -->
     <string name="settings_title">Earthquake Settings</string>
 
-    <!-- Strings for Minimum Magnitude Preference [CHAR LIMIT=30 -->
+    <!-- Strings for Minimum Magnitude Preference [CHAR LIMIT=30] -->
     <string name="settings_min_magnitude_label">Minimum Magnitude</string>
     <string name="settings_min_magnitude_key" translatable="false">min_magnitude</string>
     <string name="settings_min_magnitude_default" translatable="false">6</string>
@@ -45,4 +45,9 @@
     <!-- Lagel for order_by most recent option [CHAR LIMIT=20] -->
     <string name="settings_order_by_most_recent_label">Most Recent</string>
     <string name="settings_order_by_most_recent_value" translatable="false">time</string>
+
+    <!-- Strings for Number of Quakes [CHAR LIMIT=20] -->
+    <string name="settings_number_of_quakes_label">Number of quakes</string>
+    <string name="settings_number_of_quakes_key" translatable="false">limit</string>
+    <string name="settings_number_of_quakes_default" translatable="false">10</string>
 </resources>

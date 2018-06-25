@@ -113,7 +113,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String minMagnitude = sharedPrefs.getString(
                 getString(R.string.settings_min_magnitude_key),
-                getString(R.string.settings_order_by_magnitude_value)
+                getString(R.string.settings_min_magnitude_default)
         );
 
         String orderBy = sharedPrefs.getString(
@@ -121,11 +121,16 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
                 getString(R.string.settings_order_by_most_recent_value)
         );
 
+        String numberOfQuakes = sharedPrefs.getString(
+                getString(R.string.settings_number_of_quakes_key),
+                getString(R.string.settings_number_of_quakes_default)
+        );
+
         Uri baseUri = Uri.parse(USGS_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         uriBuilder.appendQueryParameter("format", "geojson");
-        uriBuilder.appendQueryParameter("limit", "10");
+        uriBuilder.appendQueryParameter("limit", numberOfQuakes);
         uriBuilder.appendQueryParameter("minmag", minMagnitude);
         uriBuilder.appendQueryParameter("orderby", orderBy);
         // Create a new loader for the given URL
